@@ -1,0 +1,31 @@
+# Build Docker images for containerizable packages on PRs
+name: Build Docker Images on PR
+
+on:
+  pull_request:
+    paths:
+      - 'packages/simple-express-server/**'
+      - 'packages/simple-react-app/**'
+
+jobs:
+  build-express-server:
+    name: Build simple-express-server Docker image
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/simple-express-server
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build -t simple-express-server:pr .
+
+  build-react-app:
+    name: Build simple-react-app Docker image
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/simple-react-app
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build -t simple-react-app:pr .
