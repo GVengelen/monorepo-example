@@ -1,6 +1,6 @@
 {
   "name": "@my-namespace/simple-shared-data",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "> TODO: description",
   "author": "Alex Eagleson <alexeagleson@gmail.com>",
   "homepage": "https://github.com/alexeagleson/monorepo-example#readme",
