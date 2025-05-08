@@ -1,0 +1,77 @@
+# Tagged release: Build Docker images and publish to npm for tagged packages
+name: Release Tagged Packages
+
+on:
+  push:
+    tags:
+      - 'simple-express-server@*'
+      - 'simple-react-app@*'
+      - 'simple-shared-data@*'
+
+jobs:
+  build-express-server:
+    if: startsWith(github.ref, 'refs/tags/simple-express-server@')
+    name: Build and Publish simple-express-server
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/simple-express-server
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org/'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build Docker image
+        run: docker build -t simple-express-server:release .
+      - name: Publish to npm
+        run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  build-react-app:
+    if: startsWith(github.ref, 'refs/tags/simple-react-app@')
+    name: Build and Publish simple-react-app
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/simple-react-app
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org/'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build Docker image
+        run: docker build -t simple-react-app:release .
+      - name: Publish to npm
+        run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-shared-data:
+    if: startsWith(github.ref, 'refs/tags/simple-shared-data@')
+    name: Publish simple-shared-data
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/simple-shared-data
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org/'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Publish to npm
+        run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
